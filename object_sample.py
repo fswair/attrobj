@@ -1,4 +1,4 @@
-from moderndict import Object
+from object import Object
 
 data = Object({"quake": {"mw": "3.7"}})
 data2 = Object({"quake": {"ml": "3.9"}})
