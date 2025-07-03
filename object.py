@@ -1,8 +1,14 @@
-from types import NoneType
+"""
+A dictionary manipulator that enables attribute-style access to dictionary items.
+
+Also, supports nested dictionaries.
+"""
+
 from typing import Any, Callable, Iterable, TypeAlias
 
-from numpy import iterable
-
+iterable = lambda x: hasattr(x, '__iter__') and\
+    not isinstance(x, (str, bytes, dict))
+NoneType = type(None)
 Predicate: TypeAlias = Callable[[Any], bool]
 
 class Object(dict):
@@ -59,7 +65,7 @@ class Object(dict):
 
         if name in self:
             val = self[name]
-            if iterable(val) and not isinstance(val, (dict, str, bytes)):
+            if iterable(val):
                 if val and isinstance(val[0], dict):
                     return list(map(Object, val))
                 return val
@@ -89,7 +95,7 @@ class Object(dict):
     def __getitem__(self, key):
         return self.get(key)
     
-    def any(self, keys: Iterable[str], key: bool = False) -> Any | "Object" | None:
+    def any(self, keys: Iterable[str], key: bool = False) -> Any |  None:
         """
         Find the first key in the provided iterable that exists in the object and return its value.
 
@@ -121,7 +127,7 @@ class Object(dict):
         """
         return key in self
     
-    def only(self, predicate: Predicate = None, is_not: type = NoneType) -> "Object":
+    def only(self, predicate: Predicate = None, is_not: type = NoneType):
         """
         Filter the object to only include keys that match the predicate.
 
@@ -131,4 +137,7 @@ class Object(dict):
         ## Returns:
             Object: A new Object containing only the key-value pairs that match the predicate.
         """
-        return Object({k: v for k, v in self.items() if (predicate(k, v) if predicate else not isinstance(v, is_not))})
+        return Object({
+            k: v for k, v in self.items()
+            if (predicate(k, v) if predicate else not isinstance(v, is_not))
+        })
