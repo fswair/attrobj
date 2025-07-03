@@ -42,7 +42,7 @@ class Object(dict):
         """Returns a string representation of the object."""
         return f"Object({dict(self)})"
     
-    def __getattribute__(self, name: str):
+    def __getattr__(self, name: str):
         """
         Customizes attribute access for dictionary-like objects.
 
