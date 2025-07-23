@@ -1,2 +1,2 @@
-# custom_builtins
-some custom implementations based on builtin classes using inheritance way
+# attrobj
+A dictionary manipulator that enables attribute-style access to dictionary items.
